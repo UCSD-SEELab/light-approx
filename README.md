@@ -1,14 +1,14 @@
-# light-approximation
+# light-approx
 
-light-approximation
+light-approx
   - machine-learning
     - src
     - data
     - output
-  - light-sensor-stationary
+  - sensor-station
     - src
     - design
-  - light-sensor-wearable
+  - sensor-trinket
     - src
     - design
   - feature-extraction
