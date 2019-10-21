@@ -24,8 +24,9 @@ sensor.conversion_mode = sensor.MODE_2
 
 # Initialize config details
 config = ConfigParser()
-path = os.path.realpath(__file__)
-config.read_file(open('config.ini'))
+path = os.path.dirname(os.path.realpath(__file__))
+file_path = path + '/config.ini'
+config.read_file(open(file_path))
 
 # Use the Pi's MAC address as a unique identifier
 mac = ':'.join(re.findall('..', '%012x' % get_mac()))
