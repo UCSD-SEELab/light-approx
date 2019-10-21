@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-import configparser
+from configparser import ConfigParser
 import time
 import datetime
 
 import board
 import busio
+from uuid import getnode as get_mac
+import re, sys, os
 
 from adafruit_as726x import Adafruit_AS726x
 from PushingBox import PushingBox
 
 pbox = PushingBox()
 
-startTime = time.time()
 #maximum value for sensor reading
 max_val = 16000
 
@@ -22,18 +23,28 @@ sensor = Adafruit_AS726x(i2c)
 sensor.conversion_mode = sensor.MODE_2
 
 # Initialize config details
-config = configparser.ConfigParser()
-config.read('config.ini')
+config = ConfigParser()
+path = os.path.realpath(__file__)
+config.read_file(open('config.ini'))
 
 # Use the Pi's MAC address as a unique identifier
-mac = getMac()
+mac = ':'.join(re.findall('..', '%012x' % get_mac()))
 
 # If Pi's MAC already exists in config, load the parameters
+print(config.sections())
 if mac in config:
     parameters = config[mac]
 # If Pi's MAC is new, add to the config file and populate with default values
 else:
-    config[mac] = {}
+    config[mac] = {
+            'name' : '',
+            'pbox_devid': '',
+            'hw_version': '',
+            'fw_version': ''
+    }
+
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
     parameters = config['DEFAULT']
 
 #Sampling frequency (seconds)
@@ -41,13 +52,13 @@ SAMPLING_FREQ = 60
 
 #Device id for PushingBox
 devid = parameters['pbox_devid']
-
 def main():
     while True:
         # Wait for data to be ready
-         while not sensor.data_ready:
+        while not sensor.data_ready:
              time.sleep(.1)
 
+        startTime = time.time()
         print_values()
         write_data_to_local()
 
@@ -58,7 +69,7 @@ def main():
         while(time.time() - startTime <= SAMPLING_FREQ):
             time.sleep(1)
         startTime = startTime + SAMPLING_FREQ
-
+'''
 #gets Mac Address of Pi as a string
 def getMac(interface='eth0'):
     try:
@@ -66,11 +77,11 @@ def getMac(interface='eth0'):
     except:
         str = "00:00:00:00:00:00"
     return str[0:17]
+'''
 
 #Returns bool regarding if light values exists (true) or not (false)
 def all_dark():
-        if sensor.violet != 0 or sensor.blue != 0 or sensor.green != 0 or
-           sensor.yellow != 0 or sensor.orange != 0 or sensor.red != 0:
+        if sensor.violet != 0 or sensor.blue != 0 or sensor.green != 0 or sensor.yellow != 0 or sensor.orange != 0 or sensor.red != 0:
             return False
         return True
 
