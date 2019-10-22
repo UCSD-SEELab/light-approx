@@ -23,6 +23,7 @@ outputname = ['logger_oct_7.xlsx','logger_oct_8.xlsx','logger_oct_9.xlsx','logge
 data_arr = []
 #clustering_arr = []
 
+""" raw data processing func, fill n/a, add sat_ratio, convert time-zone, manual judgement"""
 def read_data(filename,outputname,data_arr):
     for i in range(len(filename)):
         logger = pd.read_csv(filename[i],delimiter=',')
@@ -48,6 +49,7 @@ def read_data(filename,outputname,data_arr):
         data_arr.append(logger)
     return data_arr
 
+""" manually annotated data using activity log"""
 def read_annotated_data(filename):
     annotated = pd.read_excel(filename)
 
@@ -59,7 +61,7 @@ def read_annotated_data(filename):
     y = annotated['classification']
     return X,y,ambuguity
 
-
+""" tune parameters of svm, including c and gamma"""
 def grid_search_svm(X,y):
     clf = SVC(gamma='scale')
     C_list = [{'kernel':['rbf'],'C':[0.001,0.01,0.1],'gamma':[0.05,0.2,1,5]}]
@@ -68,6 +70,7 @@ def grid_search_svm(X,y):
     #print (search.best_params_)
     return search.best_params_
 
+""" tune parametes of rf, including estimators and max-depth"""
 def grid_search_rf(X,y):
     clf = RandomForestClassifier()
     parameter = [{'n_estimators':[20,50,100],'max_depth':[5,10,50]}]
@@ -75,7 +78,7 @@ def grid_search_rf(X,y):
     search.fit(X,y)
     return search.best_params_
 
-
+""" train and test svm clf"""
 def svm_train_test(X,y,best_params_):
     clf=SVC(kernel=best_params_['kernel'],C=best_params_['C'],gamma=best_params_['gamma'])
     classify=0
@@ -93,6 +96,7 @@ def svm_train_test(X,y,best_params_):
         ave_acc_svm.append(clf.score(X_test,y_test))
     return ave_acc_svm, clf
 
+""" train and test rf clf"""
 def rf_train_test(X,y,best_params_):
     clf = RandomForestClassifier(n_estimators=search.best_params_['n_estimators'],max_depth=search.best_params_['max_depth'])
     sc = StandardScaler()
@@ -109,6 +113,7 @@ def rf_train_test(X,y,best_params_):
         ave_acc_rf.append(clf.score(X_test,y_test))
     return ave_acc_rf,clf
 
+""" visualize svm classification results"""
 def plot_svm_results(indoor,outdoor,ambuguity):
     plt.figure(figsize=(20,10))
     plt.scatter(indoor.iloc[:,0],indoor.iloc[:,1],c='steelblue',s=20,label='indoor',marker='*')
@@ -125,6 +130,7 @@ def plot_svm_results(indoor,outdoor,ambuguity):
         handle.set_sizes([60.0])
     plt.show()
 
+""" plot confusion matrix"""
 def plot_confusion(y,Y_pred):
    
     cm = confusion_matrix(y, Y_pred)
