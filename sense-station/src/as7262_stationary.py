@@ -24,8 +24,9 @@ sensor.conversion_mode = sensor.MODE_2
 
 # Initialize config details
 config = ConfigParser()
-path = os.path.realpath(__file__)
-config.read_file(open('config.ini'))
+path = os.path.dirname(__file__)
+print(os.path.join(path, 'config.ini'))
+config.read(os.path.join(path, 'config.ini'))
 
 # Use the Pi's MAC address as a unique identifier
 mac = ':'.join(re.findall('..', '%012x' % get_mac()))
@@ -43,7 +44,7 @@ else:
             'fw_version': ''
     }
 
-    with open('config.ini', 'w') as configfile:
+    with open(os.path.join(path, 'config.ini'), 'w') as configfile:
         config.write(configfile)
     parameters = config['DEFAULT']
 
@@ -53,6 +54,7 @@ SAMPLING_FREQ = 60
 #Device id for PushingBox
 devid = parameters['pbox_devid']
 def main():
+    print("as7262_stationary.py started")
     while True:
         # Wait for data to be ready
         while not sensor.data_ready:
@@ -98,13 +100,13 @@ def print_values():
 #attempts to write data to local reading file
 def write_data_to_local():
     try:
-        with open('as7262_readings.txt', 'a+') as write_file:
+        with open(os.path.join(path, 'as7262_readings.txt'), 'a+') as write_file:
             write_file.write(str(datetime.datetime.now()) + "," + str(sensor.violet) +
                     "," + str(sensor.blue) + "," + str(sensor.green) + "," +
                     str(sensor.yellow) + "," + str(sensor.orange) + "," +
                     str(sensor.red) + "\n")
     except:
-        with open('error_log.txt', 'a+') as error_file:
+        with open(os.path.join(path, 'error_log.txt'), 'a+') as error_file:
             error_file.write(str(datetime.datetime.now()) + " Could not write to file. Check remaining storage size.")
 
 #updates pushing box with new sensor values.
@@ -114,7 +116,7 @@ def update_pushingbox():
                 greenData=sensor.green, yellowData=sensor.yellow,
                 orangeData=sensor.orange, redData=sensor.red)
     except:
-        with open('error_log.txt', 'a+') as error_file:
+        with open(os.path.join(path, 'error_log.txt'), 'a+') as error_file:
             error_file.write(str(datetime.datetime.now()) + " Could not push to PushingBox. Check internet connection.")
 
 
