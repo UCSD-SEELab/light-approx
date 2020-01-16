@@ -45,7 +45,7 @@ def read_data(filename,outputname,data_arr):
             elif logger.iloc[j,2] < 2.5 and logger.iloc[j,8] < 0.7:
                 # accuracy helps to correct the sat_ratio
                 logger.iloc[j,-1] = 1
-        #logger.to_excel(outputname[i])      
+        logger.to_excel(outputname[i])      
         data_arr.append(logger)
     return data_arr
 
@@ -185,28 +185,31 @@ def plot_confusion(y,Y_pred):
 
 
 def main():
-    #data_arr = read_data(filename,outputname,data_arr)
-    #master_data = pd.concat([data_arr[0],data_arr[1],data_arr[2],data_arr[3],data_arr[4]],axis=0)
-    data_arr=[]
-    oct_24 = pd.read_excel('logger_oct_24.xlsx');
-    oct_25 = pd.read_excel('logger_oct_25.xlsx')
-    oct_26 = pd.read_excel('logger_oct_26.xlsx')
-    oct_27 = pd.read_excel('logger_oct_27.xlsx')
-    pre_data = pd.read_excel('master_annotated.xlsx')
-    data_arr.append(pre_data)
-    data_arr.append(oct_24)
-    data_arr.append(oct_25)
-    data_arr.append(oct_26)
-    data_arr.append(oct_27)
-    master_data = pd.concat(data_arr)
-    master_data.to_excel('twoWeeks.xlsx')
-    X,y,ambuguity = read_annotated_data('twoWeeks.xlsx')
-    best_params_ = grid_search_svm(X,y)
-    ave_acc_svm,clf = svm_train_test(X,y,best_params_)
+    # data_arr = []
+    # data_arr = read_data(['../data/20191213-130530.txt'],['../data/Chau_12_13.xlsx'],data_arr)
+    # master_data = pd.concat([data_arr[0],data_arr[1],data_arr[2],data_arr[3],data_arr[4]],axis=0)
+    # data_arr=[]
+    # oct_24 = pd.read_excel('logger_oct_24.xlsx');
+    # oct_25 = pd.read_excel('logger_oct_25.xlsx')
+    # oct_26 = pd.read_excel('logger_oct_26.xlsx')
+    # oct_27 = pd.read_excel('logger_oct_27.xlsx')
+    # pre_data = pd.read_excel('master_annotated.xlsx')
+    # data_arr.append(pre_data)
+    # data_arr.append(oct_24)
+    # data_arr.append(oct_25)
+    # data_arr.append(oct_26)
+    # data_arr.append(oct_27)
+    # master_data = pd.concat(data_arr)
+    # # master_data.to_excel('twoWeeks.xlsx')
+    # X,y,ambuguity = read_annotated_data('twoWeeks.xlsx')
+    X,y,ambuguity = read_annotated_data('../data/Chau_12_13.xlsx')
+    # best_params_ = grid_search_svm(X,y)
+    # ave_acc_svm,clf = svm_train_test(X,y,best_params_)
     # save the model to current directory
-    filename = 'finalized_model.sav'
-    pickle.dump(clf, open(filename, 'wb'))
+    # filename = 'finalized_model.sav'
+    # pickle.dump(clf, open(filename, 'wb'))
  
+    clf = pickle.load(open('finalized_model.sav', 'rb'))
     sc = StandardScaler()
     X_sd = sc.fit_transform(X)
     Y_pred = clf.predict(X_sd)
@@ -218,7 +221,8 @@ def main():
     outdoor = df[df.classification == 1]
     plot_svm_results(indoor,outdoor,ambuguity)
     #loaded_model = pickle.load(open(filename, 'rb'))
-    #result = loaded_model.score(X_test, Y_test)
+    result = clf.score(X, y)
+    print(result)
 
 
 
