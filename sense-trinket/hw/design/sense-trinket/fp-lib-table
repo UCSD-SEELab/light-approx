@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name passives)(type KiCad)(uri /home/mostertag/Workbench/kicad/passives.pretty)(options "")(descr ""))
+  (lib (name common)(type KiCad)(uri /home/mostertag/Workbench/kicad/common.pretty)(options "")(descr ""))
+  (lib (name sense-trinket)(type KiCad)(uri ${KIPRJMOD}/sense-trinket.pretty)(options "")(descr ""))
+)
