@@ -15,16 +15,16 @@ from oauth2client.service_account import ServiceAccountCredentials
 
  def process_data(data_in,filename):
        
-        for line in data_in.split(b'\n'):
+        for line in data_in.split('\n'):
             #print('for loop in process_data')
             try:
-                list_vars = line.split(b'\t')
+                list_vars = line.split('\t')
                 if (len(list_vars) == 4):
                     #print('if statement in try')
                     data_ip = list_vars[0]
                     data_name = list_vars[1]
                     data_timestamp = int(list_vars[2])
-                    data_csv = list_vars[3].split(b',')
+                    data_csv = list_vars[3].split(',')
                 else:
                     continue
 
@@ -99,8 +99,8 @@ def data_upload(scope,json,excel,txt):
                 
 
 def main():
-    url = 'http://hpwren.ucsd.edu/TM/Sensors/Data/20190522/198.202.124.3-HPWREN:SDSC:Davis:1:0'
-    filename = '5_22_sdsc'
+    url = 'http://hpwren.ucsd.edu/TM/Sensors/Data/2019/20191201/198.202.124.3-HPWREN:SDSC:Davis:1:0'
+    filename = '12_01_sdsc'
     with requests.get(url) as fid:
             data_temp = fid.text
             if (len(data_temp) > 0):
