@@ -11,9 +11,8 @@ from sklearn.metrics import mean_squared_error, r2_score
 from numpy import mean
 from numpy import std
 
-def g_function(peak,bandwith,f_range):
-    value = 1/(np.sqrt(2*np.pi)*bandwidth)*np.exp(-((f_range-peak)**2)/(2*bandwidth**2))
-    return value
+def g_function(amplitude, peak,std,f_range):
+    return amplitude*np.exp(-(f_range-peak)**2/(2*std**2))
 
 def power_cal(solar, function, step_size):
     total_power = np.sum(solar*function)*step_size
