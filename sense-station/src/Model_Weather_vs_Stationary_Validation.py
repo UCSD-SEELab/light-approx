@@ -91,12 +91,12 @@ if __name__ == '__main__':
     peak=[450,500,550,570,600,650]
     bandwidth = 40
     f_range = np.arange(300, 800, 5) 
-    violet = g_function(peak[0],bandwidth,f_range)
-    blue = g_function(peak[1],bandwidth,f_range)
-    green = g_function(peak[2],bandwidth,f_range)
-    yellow = g_function(peak[3],bandwidth,f_range)
-    orange = g_function(peak[4],bandwidth,f_range)
-    red = g_function(peak[5],bandwidth,f_range)
+    violet = g_function(1,peak[0],bandwidth,f_range)
+    blue = g_function(1,peak[1],bandwidth,f_range)
+    green = g_function(1,peak[2],bandwidth,f_range)
+    yellow = g_function(1,peak[3],bandwidth,f_range)
+    orange = g_function(1,peak[4],bandwidth,f_range)
+    red = g_function(1,peak[5],bandwidth,f_range)
 
     stationary = get_stationary()
     weather = get_solar()
