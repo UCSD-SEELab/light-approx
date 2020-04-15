@@ -4,18 +4,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
 import keras 
-from keras.layers import Dense, Activation
-from keras.models import Sequential
-from sklearn.model_selection import train_test_split
+from keras.layers import Dense, Activation, Input
+from keras.models import Sequential,Model
+from sklearn.model_selection import train_test_split,TimeSeriesSplit
 from sklearn.metrics import mean_squared_error, r2_score
-from numpy import mean
-from numpy import std
-from keras.layers import Input
+from numpy import mean,std
 from keras.layers.merge import concatenate
-from sklearn.model_selection import TimeSeriesSplit
-# from sklearn.linear_model import LinearRegression
 from scipy.interpolate import interp1d
-from keras.models import Model
+
+# return color filter
+def color_filter(peak, bandwidth, f_range):
+    violet = g_function(peak[0],bandwidth,f_range)
+    blue = g_function(peak[1],bandwidth,f_range)
+    green = g_function(peak[2],bandwidth,f_range)
+    yellow = g_function(peak[3],bandwidth,f_range)
+    orange = g_function(peak[4],bandwidth,f_range)
+    red = g_function(peak[5],bandwidth,f_range)
+    return violet, blue, green, yellow, orange, red
 
 # construct six gaussian filters
 def g_function(peak,std,f_range):
@@ -119,13 +124,8 @@ if __name__ == '__main__':
     bandwidth = 40
     f_range = np.arange(300, 800, 5) 
     # construct spectral filters
-    violet = g_function(peak[0],bandwidth,f_range)
-    blue = g_function(peak[1],bandwidth,f_range)
-    green = g_function(peak[2],bandwidth,f_range)
-    yellow = g_function(peak[3],bandwidth,f_range)
-    orange = g_function(peak[4],bandwidth,f_range)
-    red = g_function(peak[5],bandwidth,f_range)
-
+    violet, blue, green, yellow, orange, red = color_filter(peak,bandwidth,f_range)
+    
     stationary = get_stationary()
     weather = get_solar()
     weather = weather.resample('1T', on='New_Time').mean()
