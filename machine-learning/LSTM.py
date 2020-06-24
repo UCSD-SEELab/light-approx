@@ -93,7 +93,7 @@ def main():
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
     test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
-    model = model(train_x)
+    model = model(train_X)
     history = model.fit(train_X, train_y, epochs=50, batch_size=16, validation_data=(
         test_X, test_y), verbose=2, shuffle=False)
     plot_history(history)
