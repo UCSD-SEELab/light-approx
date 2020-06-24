@@ -51,10 +51,10 @@ def model(train_X):
 
 
 def plot_history(history):
-    pyplot.plot(history.history['loss'], label='train')
-    pyplot.plot(history.history['val_loss'], label='test')
-    pyplot.legend()
-    pyplot.show()
+    plt.plot(history.history['loss'], label='train')
+    plt.plot(history.history['val_loss'], label='test')
+    plt.legend()
+    plt.show()
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
     # matching timestep
     wearable, weather, stationary, gps = match_dates(
         wearable_data, weather_data, stationary_data, gps_data)
-    look_back = 5
+    
     scaler = MinMaxScaler(feature_range=(0, 1))
     # combine all dataset together
     concat = pd.concat([weather, stationary, gps, wearable], axis=1)
@@ -89,9 +89,7 @@ def main():
     # split into input and outputs
     train_X, train_y = train[:, :-6], train[:, -6:]
     test_X, test_y = test[:, :-6], test[:, -6:]
-    # reshape input to be [samples, time steps, features]
-    trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-    testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+
     # reshape input to be 3D [samples, timesteps, features]
     train_X = train_X.reshape((train_X.shape[0], 1, train_X.shape[1]))
     test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
